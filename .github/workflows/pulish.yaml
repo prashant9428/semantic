@@ -100,7 +100,7 @@ jobs:
           array=${{ github.event.commits }}
           for item in ${array[*]}
           do
-           echo "length=$({{env.length}} + 1)" >> $GITHUB_ENV;
+           echo "length=$(${{env.length}} + 1)" >> $GITHUB_ENV;
           done
       
       - name: length log
