@@ -16,6 +16,7 @@ env:
   ## Sets environment variable
   master: 3    
   tag: 0
+  length: 0
 
 jobs:
   build:
@@ -95,7 +96,11 @@ jobs:
       #     git push origin ${{steps.commit-tag.outputs.tag}}
 
       - name: get length of arr
-        run: echo "${{github.event.commits.size()}}"
+        run: |
+          $ for i in "${github.event.commits[*]}"; do echo "length=$(env.length + 1)" >> $GITHUB_ENV; done
+      
+      - name: length log
+        run: echo "${{env.length}}"
       
         
       - name: get tag from master
