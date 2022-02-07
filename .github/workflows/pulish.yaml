@@ -52,6 +52,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      
       - name: Checkout branch "development"
         if: github.ref == 'refs/heads/development'
         uses: actions/checkout@v2
@@ -70,6 +71,8 @@ jobs:
         with:
           ref: staged
           fetch-depth: 0
+      - name: commit body
+        run: echo "${{toJson(github.event.commits)}}"
 
 #       - name: checkHead
 #         id: head
