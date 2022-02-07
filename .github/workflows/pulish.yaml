@@ -95,7 +95,7 @@ jobs:
       #     git push origin ${{steps.commit-tag.outputs.tag}}
 
       - name: get length of arr
-        run: echo "${{github.event.commits.length}}"
+        run: echo "${{github.event.commits.size()}}"
       
         
       - name: get tag from master
