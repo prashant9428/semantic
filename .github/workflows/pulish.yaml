@@ -106,7 +106,7 @@ jobs:
           done
       
       - name: length log
-        run: echo "${{github.event.commits[(${{env.length}} - 3)].id}}"
+        run: echo "${{github.event.commits[$(env.length)].id}}"
       
         
       - name: get tag from master
