@@ -94,17 +94,11 @@ jobs:
       #     git tag ${{steps.commit-tag.outputs.tag}} ${{github.sha}}
       #     git push origin ${{steps.commit-tag.outputs.tag}}
       
-      - name: array length
-        id: length
-        run: echo "::set-output name=length::$(github.event.commits.length) - 3"
-
-      - name: length echo
-        run: ${{steps.length.outputs.length}}
         
       - name: get tag from master
         if: github.ref == 'refs/heads/master'
         run: |
-          echo "tag=$(git tag --contains ${{github.event.commits[$'{{steps.length.outputs.length}}']}} |head -n 1)" >> $GITHUB_ENV
+          echo "tag=$(git tag --contains ${{github.event.commits[-3]}} |head -n 1)" >> $GITHUB_ENV
      
       - name: get tag from others
         if: github.ref != 'refs/heads/master'
