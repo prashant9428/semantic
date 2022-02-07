@@ -98,14 +98,23 @@ jobs:
       - name: get length of arr
         run: |
           array=${{ github.event.commits }}
-          echo "${array[@]}" | rev
-
+          for item in ${array[*]}
+          do
+           echo ${{env.length}}
+           echo "length=$((${{env.length}}+1))" >> $GITHUB_ENV
+           echo ${{env.length}}
+          done
+      
+      - name: length log
+        run: echo "${{env.length}}"
       
         
       - name: get tag from master
         if: github.ref == 'refs/heads/master'
         run: |
-          echo "tag=$(git tag --contains ${{github.event.commits[-3].id}} |head -n 1)" >> $GITHUB_ENV
+         length=${{env.length}}-3
+         echo ${{length}}
+         echo "tag=$(git tag --contains ${{github.event.commits[length] |head -n 1)" >> $GITHUB_ENV
      
       - name: get tag from others
         if: github.ref != 'refs/heads/master'
