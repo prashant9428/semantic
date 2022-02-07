@@ -71,8 +71,7 @@ jobs:
         with:
           ref: staged
           fetch-depth: 0
-      - name: commit body
-        run: echo "${{toJson(github.event.commits)}}"
+
 
 #       - name: checkHead
 #         id: head
@@ -111,6 +110,8 @@ jobs:
         run: echo ${{github.run_id}}
       - name: 'commit id'
         run: echo ${{github.event.commits[0].id}}
+      - name: commit body
+        run: echo "${{toJson(github.event.commits)}}"
       # - name: Configure AWS credentials
       #   uses: aws-actions/configure-aws-credentials@v1
       #   with:
