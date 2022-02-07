@@ -106,13 +106,13 @@ jobs:
           done
       
       - name: length log
-        run: echo "${{env.length}}"
+        run: echo "${{github.event.commits[(${{env.length}} - 3)].id}}"
       
         
       - name: get tag from master
         if: github.ref == 'refs/heads/master'
         run: |
-          echo "tag=$(git tag --contains ${{github.event.commits[($env.length - 3)].id}} |head -n 1)" >> $GITHUB_ENV
+#          echo "tag=$(git tag --contains ${{github.event.commits[($env.length - 3)].id}} |head -n 1)" >> $GITHUB_ENV
      
       - name: get tag from others
         if: github.ref != 'refs/heads/master'
