@@ -1,0 +1,42 @@
+{
+  "name": "@prashant9428/semantic",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "sayHello": "./index.js"
+  },
+  "scripts": {
+    "commit": "cz",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "gateway": "npx @byjus-orders/nucleus-gateway"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prashant9428/test-package.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/@byjus-orders:registry=https://npm.pkg.github.com//npm.pkg.github.com/:_authToken=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"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prashant9428/test-package/issues"
+  },
+  "homepage": "https://github.com/prashant9428/test-package#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0",
+    "semantic-release": "^19.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
