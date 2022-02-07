@@ -110,7 +110,7 @@ jobs:
       
         
       - name: get tag from master
-        if: github.ref == 'refs/heads/master'
+#        if: github.ref == 'refs/heads/master'
         run: |
           array=${{ env.length }}
           echo ${{array}}
