@@ -41,9 +41,9 @@ jobs:
         with:
           ref: staged
           fetch-depth: 0
-      - name: create a release
-        run: |
-          npx semantic-release
+      # - name: create a release
+      #   run: |
+      #     npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
@@ -93,6 +93,9 @@ jobs:
       #   run: |
       #     git tag ${{steps.commit-tag.outputs.tag}} ${{github.sha}}
       #     git push origin ${{steps.commit-tag.outputs.tag}}
+
+      - name: get length of arr
+        run: echo "${{github.event.commits.length}}"
       
         
       - name: get tag from master
