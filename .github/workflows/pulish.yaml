@@ -1,6 +1,6 @@
 
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
-# added random commit
+
 name: Node.js Package
 
 on:
@@ -52,6 +52,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      
       - name: Checkout branch "development"
         if: github.ref == 'refs/heads/development'
         uses: actions/checkout@v2
@@ -70,6 +71,7 @@ jobs:
         with:
           ref: staged
           fetch-depth: 0
+
 
 #       - name: checkHead
 #         id: head
@@ -108,6 +110,8 @@ jobs:
         run: echo ${{github.run_id}}
       - name: 'commit id'
         run: echo ${{github.event.commits[0].id}}
+      - name: commit body
+        run: echo "${{toJson(github.event.commits)}}"
       # - name: Configure AWS credentials
       #   uses: aws-actions/configure-aws-credentials@v1
       #   with:
