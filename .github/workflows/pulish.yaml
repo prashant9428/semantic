@@ -112,7 +112,7 @@ jobs:
       - name: get tag from master
         if: github.ref == 'refs/heads/master'
         run: |
-         sub=$((${env.length} - 3))
+         sub=${{env.length}}
          echo ${{sub}}
          echo "tag=$(git tag --contains ${{github.event.commits[sub] |head -n 1)" >> $GITHUB_ENV
      
