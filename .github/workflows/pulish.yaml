@@ -96,10 +96,10 @@ jobs:
       #     git tag ${{steps.commit-tag.outputs.tag}} ${{github.sha}}
       #     git push origin ${{steps.commit-tag.outputs.tag}}
 
-      - name: get length of arr
-        run: |
-          array=${{ github.event.commits }}
-          echo "${{array[-1]}}"
+      # - name: get length of arr
+      #   run: |
+      #     array=${{ github.event.commits }}
+      #     echo "${{array[-1]}}"
       
       - name: length log
         run: |
