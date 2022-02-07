@@ -99,7 +99,7 @@ jobs:
       - name: get length of arr
         run: |
           array=${{ github.event.commits }}
-          echo "${array[-1]}"
+          echo "${{array[-1]}}"
       
       - name: length log
         run: |
