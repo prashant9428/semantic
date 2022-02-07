@@ -104,7 +104,7 @@ jobs:
       - name: get tag from master
         if: github.ref == 'refs/heads/master'
         run: |
-          echo "tag=$(git tag --contains ${{github.event.commits[${{steps.length.outputs.length}}-3].id}} |head -n 1)" >> $GITHUB_ENV
+          echo "tag=$(git tag --contains ${{github.event.commits[${steps.length.outputs.length}-3].id}} |head -n 1)" >> $GITHUB_ENV
      
       - name: get tag from others
         if: github.ref != 'refs/heads/master'
