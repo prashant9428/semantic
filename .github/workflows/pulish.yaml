@@ -101,7 +101,7 @@ jobs:
           for item in ${array[*]}
           do
            echo ${{env.length}}
-           echo "length=$(${{env.length}}+1)" >> $GITHUB_ENV;
+           echo "env.length=$(${{env.length}}+1)" >> $GITHUB_ENV
            echo ${{env.length}}
           done
       
