@@ -4,6 +4,7 @@ const {getReleaseBody} = require('./utils')
 
 app.get("/",async (req,res)=>{
     console.log("added user1")
+    console.log("added user2")
     
     res.status(200).json({
         status:"working"
