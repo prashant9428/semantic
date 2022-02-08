@@ -107,7 +107,7 @@ jobs:
       
       - name: length log
         run: |
-          for i in ${{github.event.commits.*.id}}; do
+          for i in [1,2,3]; do
               echo "Value: ${i}"
               echo "Value: ${i%.*}"
           done
