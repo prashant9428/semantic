@@ -98,8 +98,7 @@ jobs:
 
       - name: get length of arr
         run: |
-          commits=join(${{ github.event.commits.\*.id }}, ', ')  
-          echo $commits 
+          echo "${{github.event.commits.*.id}}"
       
       # - name: length log
       #   run: |
