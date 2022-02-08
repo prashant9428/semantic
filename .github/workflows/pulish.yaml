@@ -101,8 +101,8 @@ jobs:
           echo "commit=${{github.event.commits.*.id}}" >> $GITHUB_ENV
       - name: check array
         run: |
-          echo "${{toJson(env.commit)}}"
-          ech0 "${{env.commit[-1]}}"
+          echo "${{env.commit}}"
+          echo "${{env.commit[-1]}}"
       
       # - name: length log
       #   run: |
