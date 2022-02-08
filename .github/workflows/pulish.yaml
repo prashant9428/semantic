@@ -90,8 +90,7 @@ jobs:
       - name: commit id
         run: echo "${{env.commit}}"
 
-      - name: get tag from master
-        if: github.ref == 'refs/heads/master'
+      - name: get tag from branch
         run: |
           echo "tag=$(git tag --contains ${{env.commit}} |head -n 1)" >> $GITHUB_ENV
      
