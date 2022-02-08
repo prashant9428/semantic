@@ -113,7 +113,7 @@ jobs:
             echo "value: ${i}"
             if [[ "${i}" != "" ]]
             then
-             echo "commit=$($i)" >> $GITHUB_ENV
+             echo "commit=${i}" >> $GITHUB_ENV
             fi
           done
       
