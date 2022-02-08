@@ -108,7 +108,8 @@ jobs:
       - name: length log
         run: |
           array=(${{join(github.event.commits.*.id, ' ') }})
-          for i in "${array[@]}"; do
+          for i in "${array[@]}"
+          do
             if [[ "$(git tag --contains ${i} --sort=-refname|head -n 1)" != "" ]]; then
              echo "commit=$(${i})" >> $GITHUB_ENV
           done
