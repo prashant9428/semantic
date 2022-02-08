@@ -150,11 +150,32 @@ jobs:
           service: test-package
           cluster: ecs-sematic-deploy
           wait-for-service-stability: true
-      # - name: docker build
-      #   run: |
-      #     ls -la
-      #     docker build . -t test-package -f dockerFile --build-arg tag=${{env.tag}}
-      #     docker tag test-package:latest 964412869874.dkr.ecr.us-east-1.amazonaws.com/test-package:latest
-      #     docker push 964412869874.dkr.ecr.us-east-1.amazonaws.com/test-package:latest
+
+  sendSlackMessage:
+    needs: getTagAndBuildDocker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch "development"
+        if: github.ref == 'refs/heads/development'
+        uses: actions/checkout@v2
+        with:
+          ref: 'development'
+          fetch-depth: 0
+      - name: Checkout branch "master"
+        if: github.ref == 'refs/heads/master'
+        uses: actions/checkout@v2
+        with:
+          ref: 'master'
+          fetch-depth: 0
+      - name: Checkout branch "staged"
+        if: github.ref == 'refs/heads/staged'
+        uses: actions/checkout@v2
+        with:
+          ref: staged
+          fetch-depth: 0    
+     - name: send slack message
+       run: |
+         curl -X POST -H 'Content-type: application/json' --data '{"text":"New release is out in ${{github.ref}}" with the below features ${{join(github.event.commits.*.message, ',') }}' https://hooks.slack.com/services/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
+
       
   
