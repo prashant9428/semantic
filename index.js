@@ -3,6 +3,8 @@ const app = express()
 const {getReleaseBody} = require('./utils')
 
 app.get("/",async (req,res)=>{
+    console.log("added user1")
+    
     res.status(200).json({
         status:"working"
     });
