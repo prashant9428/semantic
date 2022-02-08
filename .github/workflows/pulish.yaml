@@ -107,8 +107,8 @@ jobs:
       
       - name: length log
         run: |
-          array=${{toJson(github.event.commits.*.id)}}
-          for i in "${array[@]}"; do
+          array=${{github.event.commits.*.id}}
+          for i in "${array[*]}"; do
               echo "Value: ${i}"
               echo "Value: ${i%.*}"
           done
