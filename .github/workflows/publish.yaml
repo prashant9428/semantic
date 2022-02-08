@@ -177,4 +177,6 @@ jobs:
         run: |
           curl --location --request POST 'https://hooks.slack.com/services/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' \
           --header 'Content-type: application/json' \
-          --data-raw '{"text":"New release is out with the below features \n ${{join(github.event.commits.*.message, '/n'}}"}'
+          --data-raw '{"text":"New release is out with the below features \n ${{join(github.event.commits.*.message, ',')}}"}'
+
+          
