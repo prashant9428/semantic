@@ -99,7 +99,7 @@ jobs:
       - name: get length of arr
         run: |
           echo "commit=${{github.event.commits.*.id}}" >> $GITHUB_ENV
-          echo "${{commit[-1]}}"
+          echo "${{env.commit[-1]}}"
       
       # - name: length log
       #   run: |
