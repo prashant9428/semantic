@@ -81,7 +81,7 @@ jobs:
           do
             echo "value: ${i}"
             echo "output: $(git tag --contains ${i})"
-            if [[ "$(git tag --contains ${i})" == "" ]]
+            if [[ "$(git tag --contains ${i})" != "" ]]
             then
              echo "commit=${i}" >> $GITHUB_ENV
             fi
