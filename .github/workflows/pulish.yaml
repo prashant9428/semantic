@@ -98,11 +98,8 @@ jobs:
 
       - name: get length of arr
         run: |
-          array=${{ github.event.commits }}
-          for i in "${myarray[@]}"; do
-              echo "Value: ${i}"
-              echo "Value: ${i%.*}"
-          done
+          commits=join(${{ github.event.commits.\*.id }}, ', ')  
+          echo $commits 
       
       # - name: length log
       #   run: |
