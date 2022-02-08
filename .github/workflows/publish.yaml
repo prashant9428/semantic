@@ -177,6 +177,6 @@ jobs:
         run: |
           curl --location --request POST '${{secrets.SLACK_WEBHOOK}}' \
           --header 'Content-type: application/json' \
-          --data-raw '{"text":"New release is out ${{gihub.ref}} \n with the below features \n ${{join(github.event.commits.*.message, '\n')}}"}'
+          --data-raw '{"text":"New release is out ${{github.ref}} \n with the below features \n ${{join(github.event.commits.*.message, '\n')}}"}'
 
           
