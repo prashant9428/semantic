@@ -1,6 +1,6 @@
 
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
-
+# temp file
 name: Node.js Package
 
 on:
@@ -16,6 +16,8 @@ env:
   ## Sets environment variable
   master: 3    
   tag: 0
+  length: 0
+  commit: 0
 
 jobs:
   build:
@@ -71,38 +73,31 @@ jobs:
         with:
           ref: staged
           fetch-depth: 0
-
-
-#       - name: checkHead
-#         id: head
-#         run: |
-#           echo "::set-output name=head::$(git tag --contains ${{github.sha}} --sort=-refname|head -n 1)"
-# #          echo "::set-output name=head::$(git branch --contains ${{github.sha}})"
-
-#       - name: checkHead output
-#         run: |
-#           echo "${{steps.head.outputs.head}}"
-
-      # - name: second last index tag
-      #   id: commit-tag
-      #   run: |
-      #       echo "::set-output name=tag::$(git tag --contains ${{github.event.commits[github.event.commits.length-2].id}} --sort=-refname|head -n 1)"
-
-      # - name: 'attach head if not found'
-      #   if: ${{ (steps.head.outputs.head == '') || (steps.head.outputs.head == ' ') }}  
-      #   run: |
-      #     git tag ${{steps.commit-tag.outputs.tag}} ${{github.sha}}
-      #     git push origin ${{steps.commit-tag.outputs.tag}}
-        
-      - name: get tag from master
-        if: github.ref == 'refs/heads/master'
+      
+      - name: length log
         run: |
-          echo "tag=$(git tag --contains ${{github.event.commits[github.event.commits.length-3].id}} |head -n 1)" >> $GITHUB_ENV
+          array=(${{join(github.event.commits.*.id, ' ') }})
+          for i in "${array[@]}"
+          do
+            echo "value: ${i}"
+            echo "output: $(git tag --contains ${i})"
+            if [[ "$(git tag --contains ${i})" != "" ]]
+            then
+             echo "commit=${i}" >> $GITHUB_ENV
+            fi
+          done
+      
+      - name: commit id
+        run: echo "${{env.commit}}"
+
+      - name: get tag from branch
+        run: |
+          echo "tag=$(git tag --contains ${{env.commit}} |head -n 1)" >> $GITHUB_ENV
      
-      - name: get tag from others
-        if: github.ref != 'refs/heads/master'
-        run: |
-          echo "tag=$(git tag --contains ${{github.event.commits[github.event.commits.length-2].id}} --sort=-refname|head -n 1)" >> $GITHUB_ENV
+      # - name: get tag from others
+      #   if: github.ref != 'refs/heads/master'
+      #   run: |
+      #     echo "tag=$(git tag --contains ${{github.event.commits[-1].id}} --sort=-refname|head -n 1)" >> $GITHUB_ENV
 
       - name: tag
         run: echo ${{env.tag}}
