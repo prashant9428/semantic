@@ -175,6 +175,6 @@ jobs:
           fetch-depth: 0    
       - name: send slack message
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"New release is out in ${{github.ref}}" with the below features ${{join(github.event.commits.*.message, ',') }}' https://hooks.slack.com/services/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
-      
-  
+          curl --location --request POST 'https://hooks.slack.com/services/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' \
+          --header 'Content-type: application/json' \
+          --data-raw '{"text":"New release is out with the below features \n ${{oin(github.event.commits.*.id, '\n'}}"}'
