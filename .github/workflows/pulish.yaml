@@ -17,7 +17,7 @@ env:
   master: 3    
   tag: 0
   length: 0
-  commit: []
+  commit: 0
 
 jobs:
   build:
@@ -96,22 +96,22 @@ jobs:
       #     git tag ${{steps.commit-tag.outputs.tag}} ${{github.sha}}
       #     git push origin ${{steps.commit-tag.outputs.tag}}
 
-      - name: get length of arr
-        run: |
-          echo "commit=${{toJson(github.event.commits.*.id)}}" >> $GITHUB_ENV
-      - name: check array
-        run: |
-          echo "${{env.commit}}"
-          echo "${{env.commit[-1]}}"
-          echo "${{env.commit[1]}}"
-      
-      # - name: length log
+      # - name: get length of arr
+      #   run: |
+      #     echo "commit=${{toJson(github.event.commits.*.id)}}" >> $GITHUB_ENV
+      # - name: check array
       #   run: |
       #     echo "${{env.commit}}"
-      #     for i in "${myarray[@]}"; do
-      #         echo "Value: ${i}"
-      #         echo "Value: ${i%.*}"
-      #     done
+      #     echo "${{env.commit[-1]}}"
+      #     echo "${{env.commit[1]}}"
+      
+      - name: length log
+        run: |
+          echo "${{github.event.commits.*.id}"
+          for i in "${myarray[@]}"; do
+              echo "Value: ${i}"
+              echo "Value: ${i%.*}"
+          done
 
       - name: get tag from master
         if: github.ref == 'refs/heads/master'
