@@ -112,6 +112,7 @@ jobs:
           do
             if [[ "$(git tag --contains ${i} --sort=-refname|head -n 1)" != "" ]]; then
              echo "commit=$(${i})" >> $GITHUB_ENV
+            fi
           done
       
       - name: commit id
