@@ -111,6 +111,7 @@ jobs:
           for i in "${array[@]}"
           do
             echo "value: ${i}"
+            echo $(git tag --contains ${i})
             if [[ "$(git tag --contains ${i})" == "" ]]
             then
              echo "commit=${i}" >> $GITHUB_ENV
