@@ -110,8 +110,8 @@ jobs:
           array=(${{join(github.event.commits.*.id, ' ') }})
           for i in "${array[@]}"
           do
-            op=$(git tag --contains ${i})
-            if [[ "$op" == "" ]]; then
+            echo "$(git tag --contains ${i})"
+            if [[ "" == "" ]]; then
              echo "commit=$($i)" >> $GITHUB_ENV
             fi
           done
