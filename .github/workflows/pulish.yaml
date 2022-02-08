@@ -107,10 +107,9 @@ jobs:
       
       - name: length log
         run: |
-          array=(1 2 3)
+          array=(${{join(github.event.commits.\*.id, ' ') }})
           for i in "${array[@]}"; do
               echo "Value: ${i}"
-              echo "Value: ${i%.*}"
           done
 
       - name: get tag from master
