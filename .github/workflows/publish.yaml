@@ -173,9 +173,9 @@ jobs:
         with:
           ref: staged
           fetch-depth: 0    
-     - name: send slack message
-       run: |
-         curl -X POST -H 'Content-type: application/json' --data '{"text":"New release is out in ${{github.ref}}" with the below features ${{join(github.event.commits.*.message, ',') }}' https://hooks.slack.com/services/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
+      - name: send slack message
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"New release is out in ${{github.ref}}" with the below features ${{join(github.event.commits.*.message, ',') }}' https://hooks.slack.com/services/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
 
       
   
