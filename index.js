@@ -3,13 +3,24 @@ const app = express()
 const {getReleaseBody} = require('./utils')
 
 app.get("/",async (req,res)=>{
+    res.status(200).json({
+        status:"working"
+    });
+})
+
+
+app.get("/release",async (req,res)=>{
 
     try {
         console.log("tag",process.env.github_tag)
         if(process.env.github_tag){
             const data = await getReleaseBody(process.env.github_tag)
-            console.log("data",data)
-            res.status(400).json(data);
+            let body = data.body
+            const searchRegExp = /\(.*\)/g;
+            body = body.replace(searchRegExp,"")
+            body = body.replace(/\n/g,' ');
+            let splitCommit = body.split('*')
+            res.status(200).json({"commits":splitCommit});
         }else{
             res.status(400).json({
                 status:"Tag not found"
@@ -20,13 +31,6 @@ app.get("/",async (req,res)=>{
     }
 
 
-})
-
-app,get("/release",async (req,res)=>{
-    console.log("added user")
-    res.status(400).json({
-        status:"working"
-    });
 })
 
 app.listen(3000,()=>{
