@@ -72,7 +72,7 @@ jobs:
           ref: staged
           fetch-depth: 0
       
-      - name: length log
+      - name: filter the tag from commits
         run: |
           array=(${{join(github.event.commits.*.id, ' ') }})
           for i in "${array[@]}"
@@ -85,7 +85,7 @@ jobs:
             fi
           done
       
-      - name: commit id
+      - name: commit id in env
         run: echo "${{env.commit}}"
 
       - name: get tag from branch
@@ -98,6 +98,11 @@ jobs:
       - name: 'commit id'
         run: echo ${{github.event.commits[0].id}}
 
+  BuildDocker:
+    needs: getTag
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

@@ -5,7 +5,7 @@ module.exports = {
         return new Promise(function (resolve,reject){
 
             var options = {
-                uri: `https://api.github.com/repos/prashant9428/test-package/releases/tags/${tag}`,
+                uri: `https://api.github.com/repos/prashant9428/semantic/releases/tags/${tag}`,
                 headers: {
                     'Accept': 'application/vnd.github.v3+json',
                     'user-agent': 'node.js'
