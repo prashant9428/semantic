@@ -99,15 +99,18 @@ jobs:
       - name: get length of arr
         run: |
           array=${{ github.event.commits }}
-          echo "${{array[-1]}}"
-      
-      - name: length log
-        run: |
-          echo "${{env.commit}}"
           for i in "${myarray[@]}"; do
               echo "Value: ${i}"
               echo "Value: ${i%.*}"
           done
+      
+      # - name: length log
+      #   run: |
+      #     echo "${{env.commit}}"
+      #     for i in "${myarray[@]}"; do
+      #         echo "Value: ${i}"
+      #         echo "Value: ${i%.*}"
+      #     done
 
       - name: get tag from master
         if: github.ref == 'refs/heads/master'
