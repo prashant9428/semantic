@@ -43,9 +43,9 @@ jobs:
         with:
           ref: staged
           fetch-depth: 0
-      # - name: create a release
-      #   run: |
-      #     npx semantic-release
+      - name: create a release
+        run: |
+          npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
@@ -73,37 +73,6 @@ jobs:
         with:
           ref: staged
           fetch-depth: 0
-
-
-#       - name: checkHead
-#         id: head
-#         run: |
-#           echo "::set-output name=head::$(git tag --contains ${{github.sha}} --sort=-refname|head -n 1)"
-# #          echo "::set-output name=head::$(git branch --contains ${{github.sha}})"
-
-#       - name: checkHead output
-#         run: |
-#           echo "${{steps.head.outputs.head}}"
-
-      # - name: second last index tag
-      #   id: commit-tag
-      #   run: |
-      #       echo "::set-output name=tag::$(git tag --contains ${{github.event.commits[github.event.commits.length-2].id}} --sort=-refname|head -n 1)"
-
-      # - name: 'attach head if not found'
-      #   if: ${{ (steps.head.outputs.head == '') || (steps.head.outputs.head == ' ') }}  
-      #   run: |
-      #     git tag ${{steps.commit-tag.outputs.tag}} ${{github.sha}}
-      #     git push origin ${{steps.commit-tag.outputs.tag}}
-
-      # - name: get length of arr
-      #   run: |
-      #     echo "commit=${{toJson(github.event.commits.*.id)}}" >> $GITHUB_ENV
-      # - name: check array
-      #   run: |
-      #     echo "${{env.commit}}"
-      #     echo "${{env.commit[-1]}}"
-      #     echo "${{env.commit[1]}}"
       
       - name: length log
         run: |
