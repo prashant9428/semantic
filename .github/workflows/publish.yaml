@@ -177,6 +177,6 @@ jobs:
         run: |
           curl --location --request POST '${{secrets.SLACK_WEBHOOK}}' \
           --header 'Content-type: application/json' \
-          --data-raw '{"text":"New release is out ${{github.ref}} \n with the below features \n ${{join(github.event.commits.*.message, '\n')}}"}'
+          --data-raw '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"*:rocket: V1.0.1*\n\n *New release is out in the Development Environment.*\n\n * Check the release notes:*"}},{"type":"divider"},{"type":"section","text":{"type":"mrkdwn","text":":star: Added New notes \n :star: New button added in the homepage \n :star: Added new user in the user function \n :star: Added new user in the user function \n\n\n"},"accessory":{"type":"image","image_url":"https://img.icons8.com/dusk/64/000000/news.png","alt_text":"alt text for image"}},{"type":"divider"},{"type":"actions","elements":[{"type":"button","text":{"type":"plain_text","text":"v1.0.1","emoji":true},"value":"click_me_123","url":"https://google.com"}]}]}'
 
           
