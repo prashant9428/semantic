@@ -42,8 +42,14 @@ jobs:
           ref: staged
           fetch-depth: 0
       - name: create a release
-        run: |
-          npx semantic-release
+        uses: cycjimmy/semantic-release-action@v2
+        with:
+          plugin: ['@semantic-release/commit-analyzer','@semantic-release/release-notes-generator','@semantic-release/github']
+          branches: |    
+            [
+              "master",
+              "development"
+            ]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
