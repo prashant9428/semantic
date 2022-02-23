@@ -42,6 +42,16 @@ jobs:
           ref: staged
           fetch-depth: 0
       - name: create a release
+        uses:
+          branches:
+            - master
+            - development
+            - staged
+          repositoryUrl: https://github.com/prashant9428/semantic
+          plugins:
+            - '@semantic-release/commit-analyzer'
+            - '@semantic-release/release-notes-generator'
+            - '@semantic-release/github'
         run: |
           npx semantic-release
         env:
