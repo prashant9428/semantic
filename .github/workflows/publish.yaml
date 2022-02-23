@@ -44,17 +44,15 @@ jobs:
       - name: create a release
         uses: cycjimmy/semantic-release-action@v2
         with:
-          plugin: |
-            [
-              '@semantic-release/commit-analyzer',
-              '@semantic-release/release-notes-generator',
-              '@semantic-release/github']
+          extra_plugins: |
+              @semantic-release/commit-analyzer
+              @semantic-release/release-notes-generator
+              @semantic-release/github
           branches: |    
-            [
-              "master",
-              "development",
-              "staged"
-            ]
+              master
+              development
+              staged
+            
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
