@@ -50,7 +50,7 @@ jobs:
               "@semantic-release/commit-analyzer",
               "@semantic-release/release-notes-generator",
               "@semantic-release/github"]}
-          EOF  
+            EOF  
       - name: create a release
         run: |
           npx semantic-release
