@@ -41,18 +41,10 @@ jobs:
         with:
           ref: staged
           fetch-depth: 0
+      - name: semanttic configuration
+        run: | 
+          echo "module.exports={"branches":["master","development","staged"],"repositoryUrl":"https://github.com/byjus-orders/microservices-stms","plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator","@semantic-release/github"]}" > release.config.json
       - name: create a release
-        uses:
-          with:
-            branches:
-              - master
-              - development
-              - staged
-            repositoryUrl: https://github.com/prashant9428/semantic
-            plugins:
-              - '@semantic-release/commit-analyzer'
-              - '@semantic-release/release-notes-generator'
-              - '@semantic-release/github'
         run: |
           npx semantic-release
         env:
