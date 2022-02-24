@@ -43,7 +43,7 @@ jobs:
           fetch-depth: 0
       - name: semanttic configuration
         run: | 
-          cat > ./release.json <<EOF
+          cat > release.json <<EOF
             {"branches":["master","development","staged"],
             "repositoryUrl":"https://github.com/prashant9428/semantic",
             "plugins":[
@@ -51,6 +51,7 @@ jobs:
               "@semantic-release/release-notes-generator",
               "@semantic-release/github"]}
           EOF  
+          echo release.json
       - name: create a release
         run: |
           npx semantic-release
