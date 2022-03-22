@@ -1,42 +1,62 @@
-const express = require("express")
-const app = express()
-const {getReleaseBody} = require('./utils')
-
-app.get("/",async (req,res)=>{
-    console.log("added user1")
-    console.log("added user2")
-    console.log("added user3")
-    
-    res.status(200).json({
-        status:"working"
-    });
-})
+const {getReleaseBody,filterCommitsFromContext,getTagFromParamstorePath} = require("./utils")
+const {GITHUB_TOKEN} = require("./config")
 
 
-app.get("/release",async (req,res)=>{
+exports.handler = async(event) => {
+  try {
+      
+      console.log(event.queryStringParameters)
+      const DNS = event.queryStringParameters && event.queryStringParameters.dns ? event.queryStringParameters.dns : null
+      const REPO_NAME = event.queryStringParameters && event.queryStringParameters.repo ? event.queryStringParameters.repo : null
+      const PATH = event.queryStringParameters && event.queryStringParameters.path ? event.queryStringParameters.path : null
+      const final_res_temp = {};
 
-    try {
-        console.log("tag",process.env.github_tag)
-        if(process.env.github_tag){
-            const data = await getReleaseBody(process.env.github_tag)
-            let body = data.body
-            const searchRegExp = /\(.*\)/g;
-            body = body.replace(searchRegExp,"")
-            body = body.replace(/\n/g,' ');
-            let splitCommit = body.split('*')
-            res.status(200).json({"commits":splitCommit});
-        }else{
-            res.status(400).json({
-                status:"Tag not found"
-            });
-        } 
-    } catch (error) {
-        res.status(404).json(error);
+      if(REPO_NAME && PATH && DNS){
+        const TAG_NAME = await getTagFromParamstorePath(PATH)
+        console.log("Tag",TAG_NAME)
+        const data = await getReleaseBody(REPO_NAME,TAG_NAME,GITHUB_TOKEN)
+        const body = data.body
+        const commits  = filterCommitsFromContext(body)
+  
+        final_res_temp.statusId = 1;
+        final_res_temp.message = "success";
+        final_res_temp.tag = TAG_NAME
+        final_res_temp.resbody = commits;
+      }else{
+        final_res_temp.statusId = 0;
+        final_res_temp.message = "repo or tag is missing";
+        final_res_temp.resbody = [];
+      }
+
+      return {
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Headers':'*',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': true,
+        },
+        body: JSON.stringify(final_res_temp)
+      }
+  
+    } catch (err) {
+  
+      var final_res_temp = {};
+      final_res_temp.statusId = 0;
+      final_res_temp.message = "something went wrong";
+      final_res_temp.resbody = null;
+      console.log(final_res_temp);
+  
+      return {
+  
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Headers':'*',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': true,
+        },
+        body: JSON.stringify(final_res_temp)
+  
+      }
     }
-
-
-})
-
-app.listen(3000,()=>{
-    console.log("server is running on port 3000")
-})
+  };
+  
