@@ -6,7 +6,6 @@ exports.handler = async(event) => {
   try {
       
 
-    
       console.log(event.queryStringParameters)
       const DNS = event.queryStringParameters && event.queryStringParameters.dns ? event.queryStringParameters.dns : null
       const REPO_NAME = event.queryStringParameters && event.queryStringParameters.repo ? event.queryStringParameters.repo : null
