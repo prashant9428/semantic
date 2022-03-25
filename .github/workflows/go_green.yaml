@@ -34,6 +34,7 @@ jobs:
       - uses: wagoid/commitlint-github-action@v4
         env:
           NODE_PATH: ${{ github.workspace }}/node_modules
+          
       - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v1
