@@ -35,18 +35,27 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/node_modules
 
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v1
-        with:
-          status: ${{ job.status }}
-          notification_title: '{workflow} has {status_message}'
-          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
-          footer: 'Linked to Repo <{repo_url}|{repo}>'
-          notify_when: 'failure'
-          mention_users: 'U0160UUNH8S,U0080UUAA9N'
-          mention_users_when: 'failure,warnings'
-          mention_groups: 'SAZ94GDB8'
-          mention_groups_when: 'failure,warnings'
+      - name: Notify slack success
+        if: success()
+        id: slack # IMPORTANT: reference this step ID value in future Slack steps
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_WBHOOK }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: app-alerts
+          status: STARTING
+          color: warning
+
+      - name: Run tests
+        # ... your test step here
+      - name: Notify slack success
+        if: success()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_WBHOOK }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          # Updates existing message from the first step
+          message_id: ${{ steps.slack.outputs.message_id }}
+          channel: app-alerts
+          status: SUCCESS
+          color: good
