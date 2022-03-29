@@ -35,12 +35,12 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/node_modules
 
-      - name: Notify slack fail
+      - name: Slack Notification
         if: failure()
+        uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_BOT_TOKEN: xxsMMrZ7aX5oFGIk88YJtG0Y
-        uses: voxmedia/github-action-slack-notify-build@v1
-        with:
-          channel: app-alerts
-          status: FAILED
-          color: danger
+          SLACK_CHANNEL: general
+          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_MESSAGE: 'Webapp: UMS (Development) deployment has been failed.'
+          SLACK_TITLE: Message
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
