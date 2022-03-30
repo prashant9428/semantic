@@ -36,7 +36,7 @@ jobs:
           NODE_PATH: ${{ github.workspace }}/node_modules
 
       - name: Slack Notification
-        if: failure()
+        if: success()
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: general
