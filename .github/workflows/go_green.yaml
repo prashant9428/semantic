@@ -32,12 +32,20 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/node_modules
 
-      - name: Slack Notification
-        if: failure()
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: general
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_MESSAGE: 'Webapp: UMS (Development) deployment has been failed.'
-          SLACK_TITLE: Message
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    notification:
+      always()
+      needs: commitlint
+      runs-on: ubuntu-latest
+      steps:
+        - name: run ouput
+          run: |
+            echo ${{needs.commitlint}}
+        - name: Slack Notification
+          if: failure()
+          uses: rtCamp/action-slack-notify@v2
+          env:
+            SLACK_CHANNEL: general
+            SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+            SLACK_MESSAGE: 'Webapp: UMS (Development) deployment has been failed.'
+            SLACK_TITLE: Message
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
