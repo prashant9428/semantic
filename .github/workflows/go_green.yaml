@@ -33,7 +33,7 @@ jobs:
           NODE_PATH: ${{ github.workspace }}/node_modules
 
     notification:
-      always()
+      if: always()
       needs: commitlint
       runs-on: ubuntu-latest
       steps:
