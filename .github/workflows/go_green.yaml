@@ -31,21 +31,25 @@ jobs:
       - uses: wagoid/commitlint-github-action@v4
         env:
           NODE_PATH: ${{ github.workspace }}/node_modules
-
-  notification:
-    if: always()
-    needs: commitlint
-    runs-on: ubuntu-latest
-    steps:
-      - name: run ouput
-        run: |
-          echo ${{toJson(needs.commitlint)}}
       - name: Slack Notification
-        if: failure()
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: general
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_MESSAGE: 'Webapp: UMS (Development) deployment has been failed.'
-          SLACK_TITLE: Message
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+        run: |
+           echo "${{toJson(job)}}"
+
+  # notification:
+  #   if: always()
+  #   needs: commitlint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: run ouput
+  #       run: |
+  #         echo ${{toJson(needs.commitlint)}}
+  #     - name: Slack Notification
+  #       if: failure()
+  #       uses: rtCamp/action-slack-notify@v2
+  #       env:
+  #         SLACK_CHANNEL: general
+  #         SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+  #         SLACK_MESSAGE: 'Webapp: UMS (Development) deployment has been failed.'
+  #         SLACK_TITLE: Message
+  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
