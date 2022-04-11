@@ -111,45 +111,45 @@ jobs:
         if: github.ref == 'refs/heads/master'
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push the image to Amazon ECR
-        if: github.ref == 'refs/heads/master'
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: test-package
-          IMAGE_TAG: latest-image
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        run: |
-          echo $ECR_REGISTRY
-          # Build a docker container and push it to ECR 
-          docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f dockerFile --build-arg tag=${{env.tag}}
-          echo "Pushing image to ECR..."
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      # - name: Build, tag, and push the image to Amazon ECR
+      #   if: github.ref == 'refs/heads/master'
+      #   id: build-image
+      #   env:
+      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     ECR_REPOSITORY: test-package
+      #     IMAGE_TAG: latest-image
+      #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      #   run: |
+      #     echo $ECR_REGISTRY
+      #     # Build a docker container and push it to ECR 
+      #     docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f dockerFile --build-arg tag=${{env.tag}}
+      #     echo "Pushing image to ECR..."
+      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      #     echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-      - name: Download current ECS task definition
-        if: github.ref == 'refs/heads/master'
-        run: |
-          aws ecs describe-task-definition --task-definition test-package --query taskDefinition > task-definition.json
-          cat task-definition.json
+      # - name: Download current ECS task definition
+      #   if: github.ref == 'refs/heads/master'
+      #   run: |
+      #     aws ecs describe-task-definition --task-definition test-package --query taskDefinition > task-definition.json
+      #     cat task-definition.json
 
-      - name: Render new ECS task definition
-        if: github.ref == 'refs/heads/master'
-        id: render-task-definition
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: test-package
-          image: ${{ steps.build-image.outputs.image }}
+      # - name: Render new ECS task definition
+      #   if: github.ref == 'refs/heads/master'
+      #   id: render-task-definition
+      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+      #   with:
+      #     task-definition: task-definition.json
+      #     container-name: test-package
+      #     image: ${{ steps.build-image.outputs.image }}
 
-      - name: Deploy Amazon ECS task definition
-        if: github.ref == 'refs/heads/master'
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.render-task-definition.outputs.task-definition }}
-          service: test-package
-          cluster: ecs-sematic-deploy
-          wait-for-service-stability: true
+      # - name: Deploy Amazon ECS task definition
+      #   if: github.ref == 'refs/heads/master'
+      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      #   with:
+      #     task-definition: ${{ steps.render-task-definition.outputs.task-definition }}
+      #     service: test-package
+      #     cluster: ecs-sematic-deploy
+      #     wait-for-service-stability: true
 
   sendSlackMessage:
     needs: getTagAndBuildDocker
