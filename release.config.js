@@ -1,5 +1,5 @@
 module.exports  = {
-    branches: ["master"],
+    branches: ["master","prod"],
     repositoryUrl:"https://github.com/prashant9428/semantic",
     plugins:[
         '@semantic-release/commit-analyzer',
