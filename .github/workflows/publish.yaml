@@ -58,137 +58,137 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
 
-  getTagAndBuildDocker:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
+  # getTagAndBuildDocker:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
       
-      - name: Checkout branch "development"
-        if: github.ref == 'refs/heads/development'
-        uses: actions/checkout@v2
-        with:
-          ref: 'development'
-          fetch-depth: 0
-      - name: Checkout branch "master"
-        if: github.ref == 'refs/heads/master'
-        uses: actions/checkout@v2
-        with:
-          ref: 'master'
-          fetch-depth: 0
-      - name: Checkout branch "staged"
-        if: github.ref == 'refs/heads/staged'
-        uses: actions/checkout@v2
-        with:
-          ref: staged
-          fetch-depth: 0
+  #     - name: Checkout branch "development"
+  #       if: github.ref == 'refs/heads/development'
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: 'development'
+  #         fetch-depth: 0
+  #     - name: Checkout branch "master"
+  #       if: github.ref == 'refs/heads/master'
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: 'master'
+  #         fetch-depth: 0
+  #     - name: Checkout branch "staged"
+  #       if: github.ref == 'refs/heads/staged'
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: staged
+  #         fetch-depth: 0
       
-      - name: filter the tag from commits
-        run: |
-          array=(${{join(github.event.commits.*.id, ' ') }})
-          for i in "${array[@]}"
-          do
-            echo "value: ${i}"
-            echo "output: $(git tag --contains ${i})"
-            if [[ "$(git tag --contains ${i})" != "" ]]
-            then
-             echo "commit=${i}" >> $GITHUB_ENV
-            fi
-          done
+  #     - name: filter the tag from commits
+  #       run: |
+  #         array=(${{join(github.event.commits.*.id, ' ') }})
+  #         for i in "${array[@]}"
+  #         do
+  #           echo "value: ${i}"
+  #           echo "output: $(git tag --contains ${i})"
+  #           if [[ "$(git tag --contains ${i})" != "" ]]
+  #           then
+  #            echo "commit=${i}" >> $GITHUB_ENV
+  #           fi
+  #         done
       
-      - name: commit id in env
-        run: echo "${{env.commit}}"
+  #     - name: commit id in env
+  #       run: echo "${{env.commit}}"
 
-      - name: get tag from branch
-        run: |
-          echo "tag=$(git tag --contains ${{env.commit}} |head -n 1)" >> $GITHUB_ENV
-      - name: tag
-        run: echo ${{env.tag}}
-      - name: 'job id'
-        run: echo ${{github.run_id}}
-      - name: 'commit id'
-        run: echo ${{github.event.commits[0].id}}
+  #     - name: get tag from branch
+  #       run: |
+  #         echo "tag=$(git tag --contains ${{env.commit}} |head -n 1)" >> $GITHUB_ENV
+  #     - name: tag
+  #       run: echo ${{env.tag}}
+  #     - name: 'job id'
+  #       run: echo ${{github.run_id}}
+  #     - name: 'commit id'
+  #       run: echo ${{github.event.commits[0].id}}
 
-      - name: Configure AWS credentials
-        if: github.ref == 'refs/heads/master'
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
+  #     - name: Configure AWS credentials
+  #       if: github.ref == 'refs/heads/master'
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ap-south-1
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        if: github.ref == 'refs/heads/master'
-        uses: aws-actions/amazon-ecr-login@v1
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       if: github.ref == 'refs/heads/master'
+  #       uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push the image to Amazon ECR
-        if: github.ref == 'refs/heads/master'
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: test-package
-          IMAGE_TAG: latest-image
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        run: |
-          echo $ECR_REGISTRY
-          # Build a docker container and push it to ECR 
-          docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f dockerFile --build-arg tag=${{env.tag}}
-          echo "Pushing image to ECR..."
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+  #     - name: Build, tag, and push the image to Amazon ECR
+  #       if: github.ref == 'refs/heads/master'
+  #       id: build-image
+  #       env:
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         ECR_REPOSITORY: test-package
+  #         IMAGE_TAG: latest-image
+  #         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  #       run: |
+  #         echo $ECR_REGISTRY
+  #         # Build a docker container and push it to ECR 
+  #         docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f dockerFile --build-arg tag=${{env.tag}}
+  #         echo "Pushing image to ECR..."
+  #         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+  #         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-      - name: Download current ECS task definition
-        if: github.ref == 'refs/heads/master'
-        run: |
-          aws ecs describe-task-definition --task-definition test-package --query taskDefinition > task-definition.json
-          cat task-definition.json
+  #     - name: Download current ECS task definition
+  #       if: github.ref == 'refs/heads/master'
+  #       run: |
+  #         aws ecs describe-task-definition --task-definition test-package --query taskDefinition > task-definition.json
+  #         cat task-definition.json
 
-      - name: Render new ECS task definition
-        if: github.ref == 'refs/heads/master'
-        id: render-task-definition
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: test-package
-          image: ${{ steps.build-image.outputs.image }}
+  #     - name: Render new ECS task definition
+  #       if: github.ref == 'refs/heads/master'
+  #       id: render-task-definition
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: task-definition.json
+  #         container-name: test-package
+  #         image: ${{ steps.build-image.outputs.image }}
 
-      - name: Deploy Amazon ECS task definition
-        if: github.ref == 'refs/heads/master'
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.render-task-definition.outputs.task-definition }}
-          service: test-package
-          cluster: ecs-sematic-deploy
-          wait-for-service-stability: true
+  #     - name: Deploy Amazon ECS task definition
+  #       if: github.ref == 'refs/heads/master'
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+  #       with:
+  #         task-definition: ${{ steps.render-task-definition.outputs.task-definition }}
+  #         service: test-package
+  #         cluster: ecs-sematic-deploy
+  #         wait-for-service-stability: true
 
-  sendSlackMessage:
-    needs: getTagAndBuildDocker
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout branch "development"
-        if: github.ref == 'refs/heads/development'
-        uses: actions/checkout@v2
-        with:
-          ref: 'development'
-          fetch-depth: 0
-      - name: Checkout branch "master"
-        if: github.ref == 'refs/heads/master'
-        uses: actions/checkout@v2
-        with:
-          ref: 'master'
-          fetch-depth: 0
-      - name: Checkout branch "staged"
-        if: github.ref == 'refs/heads/staged'
-        uses: actions/checkout@v2
-        with:
-          ref: staged
-          fetch-depth: 0 
-      - name: github context
-        run: echo "${{toJson(github)}}   
-      - name: send slack message
-        run: |
-          curl --location --request POST '${{secrets.SLACK_WEBHOOK}}' \
-          --header 'Content-type: application/json' \
-          --data-raw '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"*:rocket: V1.0.1*\n\n *New release is out in the Development Environment.*\n\n * Check the release notes:*"}},{"type":"divider"},{"type":"section","text":{"type":"mrkdwn","text":":star: Added New notes \n :star: New button added in the homepage \n :star: Added new user in the user function \n :star: Added new user in the user function \n\n\n"},"accessory":{"type":"image","image_url":"https://img.icons8.com/dusk/64/000000/news.png","alt_text":"alt text for image"}},{"type":"divider"},{"type":"actions","elements":[{"type":"button","text":{"type":"plain_text","text":"v1.0.1","emoji":true},"value":"click_me_123","url":"https://google.com"}]}]}'
+  # sendSlackMessage:
+  #   needs: getTagAndBuildDocker
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout branch "development"
+  #       if: github.ref == 'refs/heads/development'
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: 'development'
+  #         fetch-depth: 0
+  #     - name: Checkout branch "master"
+  #       if: github.ref == 'refs/heads/master'
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: 'master'
+  #         fetch-depth: 0
+  #     - name: Checkout branch "staged"
+  #       if: github.ref == 'refs/heads/staged'
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: staged
+  #         fetch-depth: 0 
+  #     - name: github context
+  #       run: echo "${{toJson(github)}}   
+  #     - name: send slack message
+  #       run: |
+  #         curl --location --request POST '${{secrets.SLACK_WEBHOOK}}' \
+  #         --header 'Content-type: application/json' \
+  #         --data-raw '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"*:rocket: V1.0.1*\n\n *New release is out in the Development Environment.*\n\n * Check the release notes:*"}},{"type":"divider"},{"type":"section","text":{"type":"mrkdwn","text":":star: Added New notes \n :star: New button added in the homepage \n :star: Added new user in the user function \n :star: Added new user in the user function \n\n\n"},"accessory":{"type":"image","image_url":"https://img.icons8.com/dusk/64/000000/news.png","alt_text":"alt text for image"}},{"type":"divider"},{"type":"actions","elements":[{"type":"button","text":{"type":"plain_text","text":"v1.0.1","emoji":true},"value":"click_me_123","url":"https://google.com"}]}]}'
 
           
