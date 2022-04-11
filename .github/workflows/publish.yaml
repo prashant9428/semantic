@@ -52,6 +52,7 @@ jobs:
               "@semantic-release/github"]} 
       - name: create a release
         run: |
+          git fetch --all
           cat release.config.js
           npx semantic-release
         env:
