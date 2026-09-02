@@ -9,7 +9,7 @@ module.exports = {
                 headers: {
                     'Accept': 'application/vnd.github.v3+json',
                     'user-agent': 'node.js'
-                   // 'Authorization': 'token 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'
+                   // 'Authorization': 'token REDACTED_ROTATED_2026'
                 },
                 json: true // Automatically parses the JSON string in the response
             };
